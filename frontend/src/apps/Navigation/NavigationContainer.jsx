@@ -52,48 +52,31 @@ function Sidebar({ collapsible, isMobile = false }) {
     {
       key: 'dashboard',
       icon: <DashboardOutlined />,
-      label: <Link to={'/'}>{translate('dashboard')}</Link>,
+      label: <Link to={'/'}>Gösterge Paneli</Link>,
     },
     {
       key: 'customer',
       icon: <CustomerServiceOutlined />,
-      label: <Link to={'/customer'}>{translate('customers')}</Link>,
+      label: <Link to={'/customer'}>Müşteriler</Link>,
     },
-
     {
       key: 'invoice',
       icon: <ContainerOutlined />,
-      label: <Link to={'/invoice'}>{translate('invoices')}</Link>,
-    },
-    {
-      key: 'quote',
-      icon: <FileSyncOutlined />,
-      label: <Link to={'/quote'}>{translate('quote')}</Link>,
+      label: <Link to={'/invoice'}>Satışlarım / Faturalar</Link>,
     },
     {
       key: 'payment',
       icon: <CreditCardOutlined />,
-      label: <Link to={'/payment'}>{translate('payments')}</Link>,
-    },
-
-    {
-      key: 'paymentMode',
-      label: <Link to={'/payment/mode'}>{translate('payments_mode')}</Link>,
-      icon: <WalletOutlined />,
-    },
-    {
-      key: 'taxes',
-      label: <Link to={'/taxes'}>{translate('taxes')}</Link>,
-      icon: <ShopOutlined />,
+      label: <Link to={'/payment'}>Tahsilatlar</Link>,
     },
     {
       key: 'generalSettings',
-      label: <Link to={'/settings'}>{translate('settings')}</Link>,
+      label: <Link to={'/settings'}>Ayarlar</Link>,
       icon: <SettingOutlined />,
     },
     {
       key: 'about',
-      label: <Link to={'/about'}>{translate('about')}</Link>,
+      label: <Link to={'/about'}>Hakkında</Link>,
       icon: <ReconciliationOutlined />,
     },
   ];
