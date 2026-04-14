@@ -1,0 +1,88 @@
+# ══════════════════════════════════════════════════════════════════════════════
+#  EyeTech Gözlük — ERP/CRM  |  docker-compose.yml
+#  Kullanım:
+#    docker compose up -d --build   (ilk kurulum)
+#    docker compose up -d           (normal başlatma)
+#    docker compose down            (durdurma)
+#    docker compose logs -f         (log takibi)
+# ══════════════════════════════════════════════════════════════════════════════
+
+services:
+
+  # ── MongoDB Veritabanı ─────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7.0
+    container_name: eyetech-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: eyetech-erp
+    volumes:
+      - mongo_data:/data/db        # Veriler kalıcı olarak saklanır
+    networks:
+      - eyetech-net
+    # Güvenlik: MongoDB dışarıya açık değil, sadece iç ağdan erişilebilir
+
+  # ── Backend (Node.js / Express) ────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: eyetech-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env             # Sunucuda bu dosyayı oluşturun
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - mongo
+    volumes:
+      - uploads_data:/app/src/public/uploads  # Yüklenen dosyalar kalıcı
+    networks:
+      - eyetech-net
+    # Port dışarıya açılmıyor, sadece nginx üzerinden erişilebilir
+
+  # ── Frontend (React + Nginx) ───────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Bu değerleri sunucuda .env.production dosyasından çekeceğiz
+        VITE_BACKEND_SERVER: ${VITE_BACKEND_SERVER:-http://localhost/}
+        VITE_FILE_BASE_URL: ${VITE_FILE_BASE_URL:-http://localhost/}
+    container_name: eyetech-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - eyetech-net
+
+  # ── Nginx Reverse Proxy ────────────────────────────────────────────────────
+  nginx:
+    image: nginx:stable-alpine
+    container_name: eyetech-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS (Certbot ekledikten sonra aktif olur)
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - certbot_www:/var/www/certbot:ro          # Let's Encrypt doğrulama
+      - certbot_conf:/etc/letsencrypt:ro         # SSL sertifikaları
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - eyetech-net
+
+# ── Kalıcı Veri Hacimleri (Volumes) ────────────────────────────────────────
+volumes:
+  mongo_data:       # MongoDB veritabanı dosyaları
+  uploads_data:     # Kullanıcı tarafından yüklenen dosyalar
+  certbot_www:      # Let's Encrypt web challenge
+  certbot_conf:     # Let's Encrypt sertifikaları
+
+# ── İç Ağ ───────────────────────────────────────────────────────────────────
+networks:
+  eyetech-net:
+    driver: bridge
