@@ -8,7 +8,7 @@ Her adımı sırayla takip edin.
 ## ✅ Tamamlananlar
 
 - [x] Domain satın alındı: **siparbox.com**
-- [x] Cloudflare'de A kayıtları oluşturuldu → `49.13.100.200`
+- [x] Cloudflare'de A kayıtları oluşturuldu → `178.104.170.133`
 - [x] Proje dosyaları siparbox.com için güncellendi
 - [x] Nginx HTTPS yapılandırması hazır
 
@@ -59,7 +59,7 @@ git push -u origin main
    - **Image:** Ubuntu 24.04
    - **Type:** Shared CPU → **CX22** (2 vCPU, 4GB RAM) → ~4$/ay
    - **SSH Key:** Aşağıda açıklanıyor
-3. **Create & Buy Now** → **IP Adresin: `49.13.100.200`**
+3. **Create & Buy Now** → **IP Adresin: `178.104.170.133`**
 
 ### 3.3 SSH Anahtarı Oluştur (Windows'ta)
 ```powershell
@@ -78,7 +78,7 @@ cat $HOME\.ssh\id_ed25519.pub
 
 ### 4.1 SSH ile Bağlan
 ```powershell
-ssh root@49.13.100.200
+ssh root@178.104.170.133
 ```
 
 ### 4.2 Sistem Güncelle
