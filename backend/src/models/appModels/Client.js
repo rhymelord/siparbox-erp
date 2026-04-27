@@ -16,8 +16,17 @@ const schema = new mongoose.Schema({
   },
   phone: String,
   country: String,
+  city: String,
   address: String,
   email: String,
+  customerType: {
+    type: String,
+    enum: ['bireysel', 'kurumsal'],
+    default: 'bireysel',
+  },
+  taxNumber: String,
+  taxOffice: String,
+  notes: String,
   createdBy: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
   assigned: { type: mongoose.Schema.ObjectId, ref: 'Admin' },
   created: {

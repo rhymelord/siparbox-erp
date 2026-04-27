@@ -13,18 +13,11 @@ import useResponsive from '@/hooks/useResponsive';
 import {
   SettingOutlined,
   CustomerServiceOutlined,
-  ContainerOutlined,
-  FileSyncOutlined,
+  ShoppingCartOutlined,
   DashboardOutlined,
-  TagOutlined,
-  TagsOutlined,
-  UserOutlined,
   CreditCardOutlined,
   MenuOutlined,
-  FileOutlined,
-  ShopOutlined,
-  FilterOutlined,
-  WalletOutlined,
+  BankOutlined,
   ReconciliationOutlined,
 } from '@ant-design/icons';
 
@@ -61,13 +54,13 @@ function Sidebar({ collapsible, isMobile = false }) {
     },
     {
       key: 'invoice',
-      icon: <ContainerOutlined />,
-      label: <Link to={'/invoice'}>Satışlarım / Faturalar</Link>,
+      icon: <ShoppingCartOutlined />,
+      label: <Link to={'/invoice'}>Siparişler</Link>,
     },
     {
       key: 'payment',
-      icon: <CreditCardOutlined />,
-      label: <Link to={'/payment'}>Tahsilatlar</Link>,
+      icon: <BankOutlined />,
+      label: <Link to={'/payment'}>Tahsilat Durumları</Link>,
     },
     {
       key: 'generalSettings',

@@ -69,10 +69,11 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
         <Col className="gutter-row" span={8}>
           <Form.Item
             name="client"
-            label={translate('Client')}
+            label={'Müşteri'}
             rules={[
               {
                 required: true,
+                message: 'Lütfen müşteri seçin',
               },
             ]}
           >
@@ -80,7 +81,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
               entity={'client'}
               displayLabels={['name']}
               searchFields={'name'}
-              redirectLabel={'Add New Client'}
+              redirectLabel={'Yeni Müşteri Ekle'}
               withRedirect
               urlToRedirect={'/customer'}
             />
@@ -88,7 +89,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
         </Col>
         <Col className="gutter-row" span={3}>
           <Form.Item
-            label={translate('number')}
+            label={'Sipariş No'}
             name="number"
             initialValue={lastNumber}
             rules={[
@@ -102,7 +103,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
         </Col>
         <Col className="gutter-row" span={3}>
           <Form.Item
-            label={translate('year')}
+            label={'Yıl'}
             name="year"
             initialValue={currentYear}
             rules={[
@@ -117,7 +118,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
 
         <Col className="gutter-row" span={5}>
           <Form.Item
-            label={translate('status')}
+            label={'Sipariş Durumu'}
             name="status"
             rules={[
               {
@@ -128,9 +129,11 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
           >
             <Select
               options={[
-                { value: 'draft', label: translate('Draft') },
-                { value: 'pending', label: translate('Pending') },
-                { value: 'sent', label: translate('Sent') },
+                { value: 'draft', label: 'Taslak' },
+                { value: 'pending', label: 'Beklemede' },
+                { value: 'sent', label: 'Onaylandı' },
+                { value: 'on hold', label: 'Bekletiliyor' },
+                { value: 'cancelled', label: 'İptal' },
               ]}
             ></Select>
           </Form.Item>
@@ -139,7 +142,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
         <Col className="gutter-row" span={8}>
           <Form.Item
             name="date"
-            label={translate('Date')}
+            label={'Sipariş Tarihi'}
             rules={[
               {
                 required: true,
@@ -154,7 +157,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
         <Col className="gutter-row" span={6}>
           <Form.Item
             name="expiredDate"
-            label={translate('Expire Date')}
+            label={'Son Ödeme Tarihi'}
             rules={[
               {
                 required: true,
@@ -167,27 +170,27 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
           </Form.Item>
         </Col>
         <Col className="gutter-row" span={10}>
-          <Form.Item label={translate('Note')} name="notes">
-            <Input />
+          <Form.Item label={'Not / Açıklama'} name="notes">
+            <Input placeholder="Sipariş ile ilgili notlar..." />
           </Form.Item>
         </Col>
       </Row>
       <Divider dashed />
       <Row gutter={[12, 12]} style={{ position: 'relative' }}>
         <Col className="gutter-row" span={5}>
-          <p>{translate('Item')}</p>
+          <p><strong>Ürün / Hizmet</strong></p>
         </Col>
         <Col className="gutter-row" span={7}>
-          <p>{translate('Description')}</p>
+          <p><strong>Açıklama</strong></p>
         </Col>
         <Col className="gutter-row" span={3}>
-          <p>{translate('Quantity')}</p>{' '}
+          <p><strong>Miktar</strong></p>{' '}
         </Col>
         <Col className="gutter-row" span={4}>
-          <p>{translate('Price')}</p>
+          <p><strong>Birim Fiyat</strong></p>
         </Col>
         <Col className="gutter-row" span={5}>
-          <p>{translate('Total')}</p>
+          <p><strong>Tutar</strong></p>
         </Col>
       </Row>
       <Form.List name="items">
@@ -204,7 +207,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
                 icon={<PlusOutlined />}
                 ref={addField}
               >
-                {translate('Add field')}
+                + Ürün / Hizmet Ekle
               </Button>
             </Form.Item>
           </>
@@ -216,7 +219,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
           <Col className="gutter-row" span={5}>
             <Form.Item>
               <Button type="primary" htmlType="submit" icon={<PlusOutlined />} block>
-                {translate('Save')}
+                Kaydet
               </Button>
             </Form.Item>
           </Col>
@@ -229,7 +232,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
                 textAlign: 'right',
               }}
             >
-              {translate('Sub Total')} :
+              Ara Toplam :
             </p>
           </Col>
           <Col className="gutter-row" span={5}>
@@ -273,7 +276,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
                 textAlign: 'right',
               }}
             >
-              {translate('Total')} :
+              Genel Toplam :
             </p>
           </Col>
           <Col className="gutter-row" span={5}>
