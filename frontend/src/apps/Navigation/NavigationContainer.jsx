@@ -19,6 +19,7 @@ import {
   MenuOutlined,
   BankOutlined,
   ReconciliationOutlined,
+  BarcodeOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -61,6 +62,11 @@ function Sidebar({ collapsible, isMobile = false }) {
       key: 'payment',
       icon: <BankOutlined />,
       label: <Link to={'/payment'}>Tahsilat Durumları</Link>,
+    },
+    {
+      key: 'barcode-scanner',
+      icon: <BarcodeOutlined />,
+      label: <Link to={'/barcode-scanner'}>Barkod Okuyucu</Link>,
     },
     {
       key: 'generalSettings',

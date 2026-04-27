@@ -24,6 +24,7 @@ const Settings = lazy(() => import('@/pages/Settings/Settings'));
 const Profile = lazy(() => import('@/pages/Profile'));
 
 const About = lazy(() => import('@/pages/About'));
+const BarcodeScannerPage = lazy(() => import('@/pages/BarcodeScanner'));
 
 let routes = {
   expense: [],
@@ -39,6 +40,10 @@ let routes = {
     {
       path: '/about',
       element: <About />,
+    },
+    {
+      path: '/barcode-scanner',
+      element: <BarcodeScannerPage />,
     },
     {
       path: '/',
