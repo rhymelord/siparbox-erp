@@ -39,8 +39,8 @@ function LoadQuoteForm({ subTotal = 0, current = null }) {
   const [taxRate, setTaxRate] = useState(0);
   const [taxTotal, setTaxTotal] = useState(0);
   const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
-  const handelTaxChange = (value) => {
-    setTaxRate(value / 100);
+  const handelTaxChange = (value = 0) => {
+    setTaxRate(Number(value || 0) / 100);
   };
 
   useEffect(() => {
@@ -242,6 +242,7 @@ function LoadQuoteForm({ subTotal = 0, current = null }) {
           <Col className="gutter-row" span={4} offset={15}>
             <Form.Item
               name="taxRate"
+              initialValue={0}
               rules={[
                 {
                   required: true,
@@ -249,7 +250,6 @@ function LoadQuoteForm({ subTotal = 0, current = null }) {
               ]}
             >
               <SelectAsync
-                value={taxRate}
                 onChange={handelTaxChange}
                 entity={'taxes'}
                 outputValue={'taxValue'}

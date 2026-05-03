@@ -2,7 +2,7 @@
   {
     "settingCategory": "company_settings",
     "settingKey": "company_name",
-    "settingValue": "EyeTech Gözlük",
+    "settingValue": "SiparBox Gözlük",
     "valueType": "string"
   },
   {
@@ -38,7 +38,7 @@
   {
     "settingCategory": "company_settings",
     "settingKey": "company_email",
-    "settingValue": "info@eyetechgozluk.com",
+    "settingValue": "info@siparbox.com",
     "valueType": "string"
   },
   {
@@ -50,7 +50,7 @@
   {
     "settingCategory": "company_settings",
     "settingKey": "company_website",
-    "settingValue": "www.eyetechgozluk.com",
+    "settingValue": "www.siparbox.com",
     "valueType": "string"
   },
   {

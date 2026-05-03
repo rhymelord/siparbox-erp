@@ -7,6 +7,7 @@ import { PlusOutlined, BarcodeOutlined, ThunderboltOutlined } from '@ant-design/
 import { DatePicker } from 'antd';
 
 import AutoCompleteAsync from '@/components/AutoCompleteAsync';
+import SelectAsync from '@/components/SelectAsync';
 import ItemRow from '@/modules/ErpPanelModule/ItemRow';
 import MoneyInputFormItem from '@/components/MoneyInputFormItem';
 import { selectFinanceSettings } from '@/redux/settings/selectors';
@@ -40,8 +41,8 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
   const form = Form.useFormInstance();
   const addField = useRef(false);
 
-  const handelTaxChange = (value) => {
-    setTaxRate(value / 100);
+  const handelTaxChange = (value = 0) => {
+    setTaxRate(Number(value || 0) / 100);
   };
 
   useEffect(() => {
@@ -326,10 +327,10 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
           <Col className="gutter-row" span={4} offset={15}>
             <Form.Item
               name="taxRate"
+              initialValue={0}
               rules={[{ required: true }]}
             >
-              <Select
-                value={taxRate}
+              <SelectAsync
                 onChange={handelTaxChange}
                 entity={'taxes'}
                 outputValue={'taxValue'}
@@ -338,7 +339,6 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
                 urlToRedirect="/taxes"
                 redirectLabel={translate('Add New Tax')}
                 placeholder={translate('Select Tax Value')}
-                style={{ borderRadius: 6 }}
               />
             </Form.Item>
           </Col>

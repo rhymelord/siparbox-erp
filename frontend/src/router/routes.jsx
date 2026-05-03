@@ -25,6 +25,9 @@ const Profile = lazy(() => import('@/pages/Profile'));
 
 const About = lazy(() => import('@/pages/About'));
 const BarcodeScannerPage = lazy(() => import('@/pages/BarcodeScanner'));
+const Product = lazy(() => import('@/pages/Product'));
+const Taxes = lazy(() => import('@/pages/Taxes'));
+const PaymentMode = lazy(() => import('@/pages/PaymentMode'));
 
 let routes = {
   expense: [],
@@ -44,6 +47,18 @@ let routes = {
     {
       path: '/barcode-scanner',
       element: <BarcodeScannerPage />,
+    },
+    {
+      path: '/product',
+      element: <Product />,
+    },
+    {
+      path: '/taxes',
+      element: <Taxes />,
+    },
+    {
+      path: '/payment/mode',
+      element: <PaymentMode />,
     },
     {
       path: '/',

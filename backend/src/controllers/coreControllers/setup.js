@@ -1,5 +1,6 @@
 require('dotenv').config({ path: '.env' });
-require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '.env.local', override: true });
+const Joi = require('joi');
 const { globSync } = require('glob');
 const fs = require('fs');
 const { generate: uniqueId } = require('shortid');

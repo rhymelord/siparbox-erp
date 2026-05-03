@@ -4,9 +4,8 @@ import { Button, Drawer, Layout, Menu } from 'antd';
 
 import { useAppContext } from '@/context/appContext';
 
-import useLanguage from '@/locale/useLanguage';
-import logoIcon from '@/style/images/logo-icon.svg';
-import logoText from '@/style/images/logo-text.svg';
+import logoIcon from '@/style/images/siparbox-logo-icon.svg';
+import logoText from '@/style/images/siparbox-logo-text.svg';
 
 import useResponsive from '@/hooks/useResponsive';
 
@@ -15,11 +14,11 @@ import {
   CustomerServiceOutlined,
   ShoppingCartOutlined,
   DashboardOutlined,
-  CreditCardOutlined,
   MenuOutlined,
   BankOutlined,
   ReconciliationOutlined,
   BarcodeOutlined,
+  TagsOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -39,7 +38,6 @@ function Sidebar({ collapsible, isMobile = false }) {
   const [showLogoApp, setLogoApp] = useState(isNavMenuClose);
   const [currentPath, setCurrentPath] = useState(location.pathname.slice(1));
 
-  const translate = useLanguage();
   const navigate = useNavigate();
 
   const items = [
@@ -57,6 +55,11 @@ function Sidebar({ collapsible, isMobile = false }) {
       key: 'invoice',
       icon: <ShoppingCartOutlined />,
       label: <Link to={'/invoice'}>Siparişler</Link>,
+    },
+    {
+      key: 'product',
+      icon: <TagsOutlined />,
+      label: <Link to={'/product'}>Ürünler</Link>,
     },
     {
       key: 'payment',

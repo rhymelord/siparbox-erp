@@ -1,5 +1,5 @@
 require('dotenv').config({ path: '.env' });
-require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '.env.local', override: true });
 
 const path = require('path');
 const { slugify } = require('transliteration');

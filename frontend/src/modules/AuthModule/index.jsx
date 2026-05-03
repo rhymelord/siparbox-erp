@@ -5,7 +5,7 @@ import { Layout, Col, Divider, Typography } from 'antd';
 import AuthLayout from '@/layout/AuthLayout';
 import SideContent from './SideContent';
 
-import logo from '@/style/images/eyetech-logo.png';
+import logo from '@/style/images/siparbox-logo.svg';
 
 const { Content } = Layout;
 const { Title } = Typography;

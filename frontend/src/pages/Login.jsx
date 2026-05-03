@@ -59,7 +59,7 @@ const LoginPage = () => {
     );
   };
 
-  return <AuthModule authContent={<FormContainer />} AUTH_TITLE="EyeTech Giriş" />;
+  return <AuthModule authContent={<FormContainer />} AUTH_TITLE="SiparBox Giriş" />;
 };
 
 export default LoginPage;

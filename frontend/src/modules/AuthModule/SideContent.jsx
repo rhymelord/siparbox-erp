@@ -1,14 +1,10 @@
-import { Space, Layout, Divider, Typography } from 'antd';
-import logo from '@/style/images/eyetech-logo.png';
-import useLanguage from '@/locale/useLanguage';
-import { useSelector } from 'react-redux';
+import { Layout, Typography } from 'antd';
+import logo from '@/style/images/siparbox-logo.svg';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
 export default function SideContent() {
-  const translate = useLanguage();
-
   return (
     <Content
       style={{
@@ -22,14 +18,14 @@ export default function SideContent() {
       <div style={{ width: '100%' }}>
         <img
           src={logo}
-          alt="EyeTech Gözlük"
+          alt="SiparBox Gözlük"
           style={{ margin: '0 0 40px', display: 'block', borderRadius: '12px' }}
           height={100}
           width={100}
         />
 
         <Title level={1} style={{ fontSize: 28 }}>
-          EyeTech Gözlük ERP / CRM
+          SiparBox Gözlük ERP / CRM
         </Title>
         <Text style={{ fontSize: 16 }}>
           Ön Muhasebe ve İş Yönetim Sistemi <b /> <br/><br/>

@@ -196,7 +196,7 @@ docker compose exec backend node src/setup/setup.js
 Tarayıcında aç: `https://siparbox.com`
 
 İlk giriş:
-- **E-posta:** `admin@eyetech.com`
+- **E-posta:** `admin@SiparBox.com`
 - **Şifre:** `admin123`
 
 > ⚠️ İlk girişten sonra hemen şifrenizi değiştirin!

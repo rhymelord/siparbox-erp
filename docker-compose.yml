@@ -1,5 +1,5 @@
 # ══════════════════════════════════════════════════════════════════════════════
-#  EyeTech Gözlük — ERP/CRM  |  docker-compose.yml
+#  SiparBox Gözlük — ERP/CRM  |  docker-compose.yml
 #  Kullanım:
 #    docker compose up -d --build   (ilk kurulum)
 #    docker compose up -d           (normal başlatma)
@@ -12,14 +12,16 @@ services:
   # ── MongoDB Veritabanı ─────────────────────────────────────────────────────
   mongo:
     image: mongo:7.0
-    container_name: eyetech-mongo
+    container_name: siparbox-mongo
     restart: unless-stopped
     environment:
-      MONGO_INITDB_DATABASE: eyetech-erp
+      MONGO_INITDB_DATABASE: siparbox-erp
+    ports:
+      - "127.0.0.1:27017:27017"  # Local geliştirme için; dış ağa açılmaz
     volumes:
       - mongo_data:/data/db        # Veriler kalıcı olarak saklanır
     networks:
-      - eyetech-net
+      - siparbox-net
     # Güvenlik: MongoDB dışarıya açık değil, sadece iç ağdan erişilebilir
 
   # ── Backend (Node.js / Express) ────────────────────────────────────────────
@@ -27,7 +29,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: eyetech-backend
+    container_name: siparbox-backend
     restart: unless-stopped
     env_file:
       - ./backend/.env             # Sunucuda bu dosyayı oluşturun
@@ -38,7 +40,7 @@ services:
     volumes:
       - uploads_data:/app/src/public/uploads  # Yüklenen dosyalar kalıcı
     networks:
-      - eyetech-net
+      - siparbox-net
     # Port dışarıya açılmıyor, sadece nginx üzerinden erişilebilir
 
   # ── Frontend (React + Nginx) ───────────────────────────────────────────────
@@ -50,17 +52,17 @@ services:
         # Bu değerleri sunucuda .env.production dosyasından çekeceğiz
         VITE_BACKEND_SERVER: ${VITE_BACKEND_SERVER:-http://localhost/}
         VITE_FILE_BASE_URL: ${VITE_FILE_BASE_URL:-http://localhost/}
-    container_name: eyetech-frontend
+    container_name: siparbox-frontend
     restart: unless-stopped
     depends_on:
       - backend
     networks:
-      - eyetech-net
+      - siparbox-net
 
   # ── Nginx Reverse Proxy ────────────────────────────────────────────────────
   nginx:
     image: nginx:stable-alpine
-    container_name: eyetech-nginx
+    container_name: siparbox-nginx
     restart: unless-stopped
     ports:
       - "80:80"      # HTTP
@@ -73,7 +75,7 @@ services:
       - frontend
       - backend
     networks:
-      - eyetech-net
+      - siparbox-net
 
 # ── Kalıcı Veri Hacimleri (Volumes) ────────────────────────────────────────
 volumes:
@@ -84,5 +86,5 @@ volumes:
 
 # ── İç Ağ ───────────────────────────────────────────────────────────────────
 networks:
-  eyetech-net:
+  siparbox-net:
     driver: bridge

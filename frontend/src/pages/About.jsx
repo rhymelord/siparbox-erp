@@ -21,7 +21,7 @@ const About = () => {
         title={<Title level={2} style={{ margin: 0 }}>SiparBox</Title>}
         subTitle={
           <Text type="secondary" style={{ fontSize: 15 }}>
-            EyeTech Gözlük · ERP &amp; CRM Yönetim Sistemi
+            SiparBox Gözlük · ERP &amp; CRM Yönetim Sistemi
           </Text>
         }
         extra={

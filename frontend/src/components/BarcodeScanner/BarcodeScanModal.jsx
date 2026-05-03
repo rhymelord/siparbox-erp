@@ -70,7 +70,7 @@ export default function BarcodeScanModal({ open, onClose, onSuccess }) {
       .catch(() =>
         setError('Kamera erişimi sağlanamadı. Tarayıcı izinlerini kontrol edin.')
       );
-  }, [open]);
+  }, [open, form]);
 
   // Modal kapanınca kamerayı durdur
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function BarcodeScanModal({ open, onClose, onSuccess }) {
         selectedCamera || { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 260, height: 120 }, aspectRatio: 2.0 },
         (decodedText) => handleScannedCode(decodedText),
-        () => {}
+        () => undefined
       );
       setScanning(true);
     } catch (err) {
@@ -105,7 +105,9 @@ export default function BarcodeScanModal({ open, onClose, onSuccess }) {
       try {
         await scannerRef.current.stop();
         scannerRef.current.clear();
-      } catch (_) {}
+      } catch {
+        scannerRef.current = null;
+      }
       scannerRef.current = null;
     }
     setScanning(false);
@@ -133,7 +135,9 @@ export default function BarcodeScanModal({ open, onClose, onSuccess }) {
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.25);
-    } catch (_) {}
+    } catch {
+      return undefined;
+    }
   };
 
   // Backend'de barkodu ara
@@ -142,9 +146,9 @@ export default function BarcodeScanModal({ open, onClose, onSuccess }) {
     setFoundProduct(null);
     try {
       // Barkod numarasına göre ürün ara
-      const response = await request.list({
+      const response = await request.filter({
         entity: 'product',
-        options: { filter: { ref: barcode }, limit: 1 },
+        options: { filter: 'ref', equal: barcode },
       });
 
       if (response?.result && response.result.length > 0) {
@@ -152,34 +156,35 @@ export default function BarcodeScanModal({ open, onClose, onSuccess }) {
         const productData = {
           itemName: product.name || product.title || barcode,
           description: `Barkod: ${barcode}${product.description ? ' | ' + product.description : ''}`,
-          price: product.price || product.unitPrice || 0,
+          price: product.price ?? product.unitPrice ?? 0,
           quantity: 1,
         };
-        setFoundProduct(productData);
-        form.setFieldsValue(productData);
-        message.success('Ürün bulundu! Bilgileri düzenleyip onaylayın.');
+        message.success(`Ürün Eklendi: ${productData.itemName}`);
+        onSuccess(productData);
+        handleClose();
       } else {
-        // Ürün bulunamadı — barkod numarasını açıklamaya yaz, kullanıcı tamamlar
+        // Ürün bulunamadı — doğrudan taslak olarak eklensin
         const emptyData = {
-          itemName: '',
+          itemName: `Tanımsız Ürün (${barcode})`,
           description: `Barkod: ${barcode}`,
           price: 0,
           quantity: 1,
         };
         setFoundProduct(emptyData);
         form.setFieldsValue(emptyData);
-        message.warning('Ürün sistemde bulunamadı. Bilgileri manuel girin.');
+        message.warning('Ürün sistemde bulunamadı. Bilgileri tamamlayıp onaylayın.');
       }
     } catch {
       // API hatası — yine de barkod numarasını ekle
       const fallback = {
-        itemName: '',
+        itemName: `Tanımsız Ürün (${barcode})`,
         description: `Barkod: ${barcode}`,
         price: 0,
         quantity: 1,
       };
       setFoundProduct(fallback);
       form.setFieldsValue(fallback);
+      message.error('Bağlantı hatası. Barkod bilgisiyle manuel ekleme formu açıldı.');
     } finally {
       setSearching(false);
     }
