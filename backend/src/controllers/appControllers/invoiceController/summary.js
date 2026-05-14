@@ -4,6 +4,7 @@ const moment = require('moment');
 const Model = mongoose.model('Invoice');
 
 const { loadSettings } = require('@/middlewares/settings');
+const { getRoleFilter } = require('@/middlewares/dataFilterMiddleware');
 
 const summary = async (req, res) => {
   let defaultType = 'month';
@@ -30,10 +31,14 @@ const summary = async (req, res) => {
 
   const statuses = ['draft', 'pending', 'overdue', 'paid', 'unpaid', 'partially'];
 
+  // Role-based data filtering
+  const roleFilter = await getRoleFilter(req.admin);
+
   const response = await Model.aggregate([
     {
       $match: {
         removed: false,
+        ...roleFilter,
         // date: {
         //   $gte: startDate.toDate(),
         //   $lte: endDate.toDate(),
@@ -166,6 +171,7 @@ const summary = async (req, res) => {
     {
       $match: {
         removed: false,
+        ...roleFilter,
 
         // date: {
         //   $gte: startDate.toDate(),

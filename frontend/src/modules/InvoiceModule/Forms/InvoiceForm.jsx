@@ -16,6 +16,7 @@ import useLanguage from '@/locale/useLanguage';
 import calculate from '@/utils/calculate';
 import { useSelector } from 'react-redux';
 import BarcodeScanModal from '@/components/BarcodeScanner/BarcodeScanModal';
+import useResponsive from '@/hooks/useResponsive';
 
 export default function InvoiceForm({ subTotal = 0, current = null }) {
   const { last_invoice_number } = useSelector(selectFinanceSettings);
@@ -40,6 +41,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
 
   const form = Form.useFormInstance();
   const addField = useRef(false);
+  const { isMobile } = useResponsive();
 
   const handelTaxChange = (value = 0) => {
     setTaxRate(Number(value || 0) / 100);
@@ -51,8 +53,11 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
       setTaxRate(taxRate / 100);
       setCurrentYear(year);
       setLastNumber(number);
+    } else {
+      setLastNumber(last_invoice_number + 1);
+      form.setFieldsValue({ number: last_invoice_number + 1 });
     }
-  }, [current]);
+  }, [current, last_invoice_number, form]);
 
   useEffect(() => {
     const currentTotal = calculate.add(calculate.multiply(subTotal, taxRate), subTotal);
@@ -97,7 +102,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
         }}
       >
         <Row gutter={[12, 0]}>
-          <Col className="gutter-row" span={8}>
+          <Col className="gutter-row" xs={24} sm={12} md={8}>
             <Form.Item
               name="client"
               label={<span style={{ fontWeight: 600 }}>👤 Müşteri</span>}
@@ -114,7 +119,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
             </Form.Item>
           </Col>
 
-          <Col className="gutter-row" span={3}>
+          <Col className="gutter-row" xs={12} sm={8} md={3}>
             <Form.Item
               label={<span style={{ fontWeight: 600 }}>Sipariş No</span>}
               name="number"
@@ -125,7 +130,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
             </Form.Item>
           </Col>
 
-          <Col className="gutter-row" span={3}>
+          <Col className="gutter-row" xs={12} sm={8} md={3}>
             <Form.Item
               label={<span style={{ fontWeight: 600 }}>Yıl</span>}
               name="year"
@@ -136,27 +141,28 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
             </Form.Item>
           </Col>
 
-          <Col className="gutter-row" span={5}>
+          <Col className="gutter-row" xs={24} sm={12} md={5}>
             <Form.Item
               label={<span style={{ fontWeight: 600 }}>📋 Durum</span>}
               name="status"
               rules={[{ required: false }]}
-              initialValue={'draft'}
+              initialValue={'pending_approval'}
             >
               <Select
                 style={{ borderRadius: 6 }}
                 options={[
-                  { value: 'draft', label: '📝 Taslak' },
-                  { value: 'pending', label: '⏳ Beklemede' },
-                  { value: 'sent', label: '✅ Onaylandı' },
-                  { value: 'on hold', label: '⏸ Bekletiliyor' },
-                  { value: 'cancelled', label: '❌ İptal' },
+                  { value: 'pending_approval', label: '⏳ Onay Bekliyor' },
+                  { value: 'preparing', label: '📦 Hazırlanıyor' },
+                  { value: 'awaiting_shipping', label: '🚚 Kargo Bekliyor' },
+                  { value: 'cancelled', label: '❌ İptaller' },
+                  { value: 'delivered', label: '✅ Teslim Edildi' },
+                  { value: 'paid', label: '💰 Ödendi' },
                 ]}
               />
             </Form.Item>
           </Col>
 
-          <Col className="gutter-row" span={8}>
+          <Col className="gutter-row" xs={24} sm={12} md={8}>
             <Form.Item
               name="date"
               label={<span style={{ fontWeight: 600 }}>📅 Sipariş Tarihi</span>}
@@ -167,18 +173,9 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
             </Form.Item>
           </Col>
 
-          <Col className="gutter-row" span={6}>
-            <Form.Item
-              name="expiredDate"
-              label={<span style={{ fontWeight: 600 }}>⏰ Son Ödeme Tarihi</span>}
-              rules={[{ required: true, type: 'object' }]}
-              initialValue={dayjs().add(30, 'days')}
-            >
-              <DatePicker style={{ width: '100%', borderRadius: 6 }} format={dateFormat} />
-            </Form.Item>
-          </Col>
+          {/* expiredDate tamamen kaldırıldı */}
 
-          <Col className="gutter-row" span={10}>
+          <Col className="gutter-row" xs={24} sm={24} md={10}>
             <Form.Item
               label={<span style={{ fontWeight: 600 }}>💬 Not / Açıklama</span>}
               name="notes"
@@ -195,8 +192,9 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
           background: 'linear-gradient(90deg, #0050C8 0%, #00B4D8 100%)',
           borderRadius: '10px 10px 0 0',
           padding: '8px 16px',
-          marginLeft: 36,
-          marginRight: 24,
+          marginLeft: isMobile ? 0 : 36,
+          marginRight: isMobile ? 0 : 24,
+          display: isMobile ? 'none' : 'block',
         }}
       >
         <Row gutter={[8, 0]}>
@@ -219,7 +217,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
       </div>
 
       {/* ─── ÜRÜN SATIRLARI ─── */}
-      <div style={{ paddingLeft: 36, paddingRight: 24, paddingTop: 8 }}>
+      <div style={{ paddingLeft: isMobile ? 0 : 36, paddingRight: isMobile ? 0 : 24, paddingTop: 8 }}>
         <Form.List name="items">
           {(fields, { add, remove }) => (
             <>
@@ -293,7 +291,7 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
         }}
       >
         <Row gutter={[12, -5]}>
-          <Col className="gutter-row" span={5}>
+          <Col className="gutter-row" xs={24} sm={24} md={5}>
             <Button
               type="primary"
               htmlType="submit"
@@ -313,16 +311,17 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
             </Button>
           </Col>
 
-          <Col className="gutter-row" span={4} offset={10}>
+          <Col className="gutter-row" xs={16} sm={14} md={4} offset={isMobile ? 0 : 10}>
             <p style={{ paddingLeft: '12px', paddingTop: '5px', margin: 0, textAlign: 'right', fontWeight: 600, color: '#555' }}>
               Ara Toplam:
             </p>
           </Col>
-          <Col className="gutter-row" span={5}>
+          <Col className="gutter-row" xs={8} sm={10} md={5}>
             <MoneyInputFormItem readOnly value={subTotal} />
           </Col>
         </Row>
 
+        {/*
         <Row gutter={[12, -5]} style={{ marginTop: 8 }}>
           <Col className="gutter-row" span={4} offset={15}>
             <Form.Item
@@ -346,14 +345,18 @@ function LoadInvoiceForm({ subTotal = 0, current = null }) {
             <MoneyInputFormItem readOnly value={taxTotal} />
           </Col>
         </Row>
+        */}
+        <Form.Item name="taxRate" initialValue={0} hidden>
+          <Input />
+        </Form.Item>
 
         <Row gutter={[12, -5]}>
-          <Col className="gutter-row" span={4} offset={15}>
+          <Col className="gutter-row" xs={16} sm={14} md={4} offset={isMobile ? 0 : 15}>
             <p style={{ paddingLeft: '12px', paddingTop: '5px', margin: 0, textAlign: 'right', fontWeight: 700, color: '#0050C8', fontSize: 15 }}>
               Genel Toplam:
             </p>
           </Col>
-          <Col className="gutter-row" span={5}>
+          <Col className="gutter-row" xs={8} sm={10} md={5}>
             <MoneyInputFormItem readOnly value={total} />
           </Col>
         </Row>

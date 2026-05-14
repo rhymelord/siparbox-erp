@@ -26,6 +26,7 @@ export default function Delete({ config }) {
       modal.close();
       const options = { page: 1, items: 10 };
       dispatch(erp.list({ entity, options }));
+      dispatch(erp.resetAction({ actionType: 'delete' }));
     }
     if (current) {
       let labels = deleteModalLabels.map((x) => valueByString(current, x)).join(' ');

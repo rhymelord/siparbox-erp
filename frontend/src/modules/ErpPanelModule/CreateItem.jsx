@@ -110,9 +110,8 @@ export default function CreateItem({ config, CreateForm }) {
           navigate(`/${entity.toLowerCase()}`);
         }}
         backIcon={<ArrowLeftOutlined />}
-        title={translate('New')}
+        title={`${config.ENTITY_NAME} Listesine Dön`}
         ghost={false}
-        tags={<Tag>{translate('Draft')}</Tag>}
         // subTitle="This is create page"
         extra={[
           <Button
@@ -122,7 +121,6 @@ export default function CreateItem({ config, CreateForm }) {
           >
             {translate('Cancel')}
           </Button>,
-          <SaveForm form={form} key={`${uniqueId()}`} />,
         ]}
         style={{
           padding: '20px 0px',

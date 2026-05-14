@@ -18,6 +18,9 @@ const fileUpload = require('express-fileupload');
 // create our Express app
 const app = express();
 
+const httpContext = require('express-http-context');
+const requestContextMiddleware = require('./middlewares/requestContext');
+
 app.use(
   cors({
     origin: true,
@@ -31,14 +34,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(compression());
 
+app.use(httpContext.middleware);
+// We'll apply requestContextMiddleware after the JWT validation middleware 
+// on the protected routes, so it has access to req.admin
+
 // // default options
 // app.use(fileUpload());
 
 // Here our API Routes
 
 app.use('/api', coreAuthRouter);
-app.use('/api', adminAuth.isValidAuthToken, coreApiRouter);
-app.use('/api', adminAuth.isValidAuthToken, erpApiRouter);
+app.use('/api', adminAuth.isValidAuthToken, requestContextMiddleware, coreApiRouter);
+app.use('/api', adminAuth.isValidAuthToken, requestContextMiddleware, erpApiRouter);
 app.use('/download', coreDownloadRouter);
 app.use('/public', corePublicRouter);
 

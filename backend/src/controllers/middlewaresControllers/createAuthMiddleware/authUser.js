@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 const authUser = async (req, res, { user, databasePassword, password, UserPasswordModel }) => {
   const isMatch = await bcrypt.compare(databasePassword.salt + password, databasePassword.password);
@@ -28,6 +29,15 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
       }
     ).exec();
 
+    const AuditLog = mongoose.model('AuditLog');
+    const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    await new AuditLog({
+      user: user._id,
+      action: 'LOGIN',
+      entity: 'Admin',
+      ipAddress: ipAddress || 'Unknown',
+    }).save();
+
     // .cookie(`token_${user.cloud}`, token, {
     //     maxAge: req.body.remember ? 365 * 24 * 60 * 60 * 1000 : null,
     //     sameSite: 'None',
@@ -47,6 +57,7 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
         email: user.email,
         photo: user.photo,
         token: token,
+        manager: user.manager,
         maxAge: req.body.remember ? 365 : null,
       },
       message: 'Successfully login user',

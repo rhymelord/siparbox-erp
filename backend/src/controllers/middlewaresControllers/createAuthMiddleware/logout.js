@@ -25,6 +25,15 @@ const logout = async (req, res, { userModel }) => {
       }
     ).exec();
 
+  const AuditLog = mongoose.model('AuditLog');
+  const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  await new AuditLog({
+    user: req.admin._id,
+    action: 'LOGOUT',
+    entity: 'Admin',
+    ipAddress: ipAddress || 'Unknown',
+  }).save();
+
   return res.json({
     success: true,
     result: {},

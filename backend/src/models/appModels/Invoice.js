@@ -26,7 +26,7 @@ const invoiceSchema = new mongoose.Schema({
   },
   expiredDate: {
     type: Date,
-    required: true,
+    required: false,
   },
   client: {
     type: mongoose.Schema.ObjectId,
@@ -147,8 +147,8 @@ const invoiceSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['draft', 'pending', 'sent', 'refunded', 'cancelled', 'on hold'],
-    default: 'draft',
+    enum: ['pending_approval', 'preparing', 'awaiting_shipping', 'cancelled', 'delivered', 'paid'],
+    default: 'pending_approval',
   },
   pdf: {
     type: String,

@@ -13,3 +13,18 @@
 .wideNavigation {
   margin-left: 220px;
 }
+
+@media only screen and (max-width: 768px) {
+  .smallNavigation {
+    margin-left: 0;
+  }
+
+  .wideNavigation {
+    margin-left: 0;
+  }
+
+  .wideAppContainer,
+  .appContainer {
+    max-width: 100%;
+  }
+}

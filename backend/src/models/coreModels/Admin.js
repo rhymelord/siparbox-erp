@@ -29,8 +29,13 @@ const adminSchema = new Schema({
   },
   role: {
     type: String,
-    default: 'owner',
-    enum: ['owner'],
+    default: 'admin',
+    enum: ['admin', 'pazarlamaci_mudur', 'pazarlamaci'],
+  },
+  manager: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Admin',
+    default: null,
   },
 });
 

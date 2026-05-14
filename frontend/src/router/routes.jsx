@@ -19,9 +19,11 @@ const PaymentRead = lazy(() => import('@/pages/Payment/PaymentRead'));
 const PaymentUpdate = lazy(() => import('@/pages/Payment/PaymentUpdate'));
 
 const Settings = lazy(() => import('@/pages/Settings/Settings'));
-
+const AuditLog = lazy(() => import('@/pages/AuditLog'));
 
 const Profile = lazy(() => import('@/pages/Profile'));
+
+import ProtectedRoute from './ProtectedRoute';
 
 const About = lazy(() => import('@/pages/About'));
 const BarcodeScannerPage = lazy(() => import('@/pages/BarcodeScanner'));
@@ -42,7 +44,11 @@ let routes = {
     },
     {
       path: '/about',
-      element: <About />,
+      element: (
+        <ProtectedRoute allowedRoles={['admin']}>
+          <About />
+        </ProtectedRoute>
+      ),
     },
     {
       path: '/barcode-scanner',
@@ -62,7 +68,11 @@ let routes = {
     },
     {
       path: '/',
-      element: <Invoice />,
+      element: (
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Invoice />
+        </ProtectedRoute>
+      ),
     },
     {
       path: '/customer',
@@ -91,24 +101,52 @@ let routes = {
     },
     {
       path: '/payment',
-      element: <Payment />,
+      element: (
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Payment />
+        </ProtectedRoute>
+      ),
     },
     {
       path: '/payment/read/:id',
-      element: <PaymentRead />,
+      element: (
+        <ProtectedRoute allowedRoles={['admin']}>
+          <PaymentRead />
+        </ProtectedRoute>
+      ),
     },
     {
       path: '/payment/update/:id',
-      element: <PaymentUpdate />,
+      element: (
+        <ProtectedRoute allowedRoles={['admin']}>
+          <PaymentUpdate />
+        </ProtectedRoute>
+      ),
     },
 
     {
       path: '/settings',
-      element: <Settings />,
+      element: (
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Settings />
+        </ProtectedRoute>
+      ),
     },
     {
       path: '/settings/edit/:settingsKey',
-      element: <Settings />,
+      element: (
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Settings />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/auditlog',
+      element: (
+        <ProtectedRoute allowedRoles={['admin']}>
+          <AuditLog />
+        </ProtectedRoute>
+      ),
     },
     {
       path: '/profile',

@@ -8,15 +8,16 @@ export default function Customer() {
 
   const searchConfig = {
     displayLabels: ['name'],
-    searchFields: 'name',
+    searchFields: 'name,contactName,city',
   };
 
   const deleteModalLabels = ['name'];
 
   const dataTableColumns = [
     {
-      title: 'Ad Soyad / Firma',
+      title: 'Firma / Yetkili',
       dataIndex: 'name',
+      render: (name, record) => (record.contactName ? `${name} - ${record.contactName}` : name),
     },
     {
       title: 'Müşteri Tipi',

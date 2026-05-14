@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Drawer, Layout, Menu } from 'antd';
 
 import { useAppContext } from '@/context/appContext';
+import { useSelector } from 'react-redux';
+import { selectCurrentAdmin } from '@/redux/auth/selectors';
 
 import logoIcon from '@/style/images/siparbox-logo-icon.svg';
 import logoText from '@/style/images/siparbox-logo-text.svg';
@@ -40,11 +42,15 @@ function Sidebar({ collapsible, isMobile = false }) {
 
   const navigate = useNavigate();
 
+  const currentAdmin = useSelector(selectCurrentAdmin);
+  const userRole = currentAdmin?.role || 'admin';
+
   const items = [
     {
       key: 'dashboard',
       icon: <DashboardOutlined />,
       label: <Link to={'/'}>Gösterge Paneli</Link>,
+      roles: ['admin'],
     },
     {
       key: 'customer',
@@ -65,6 +71,7 @@ function Sidebar({ collapsible, isMobile = false }) {
       key: 'payment',
       icon: <BankOutlined />,
       label: <Link to={'/payment'}>Tahsilat Durumları</Link>,
+      roles: ['admin'],
     },
     {
       key: 'barcode-scanner',
@@ -75,13 +82,25 @@ function Sidebar({ collapsible, isMobile = false }) {
       key: 'generalSettings',
       label: <Link to={'/settings'}>Ayarlar</Link>,
       icon: <SettingOutlined />,
+      roles: ['admin'],
+    },
+    {
+      key: 'auditlog',
+      label: <Link to={'/auditlog'}>İşlem Geçmişi</Link>,
+      icon: <ReconciliationOutlined />,
+      roles: ['admin'],
     },
     {
       key: 'about',
       label: <Link to={'/about'}>Hakkında</Link>,
       icon: <ReconciliationOutlined />,
+      roles: ['admin'],
     },
   ];
+
+  const filteredItems = items.filter(
+    (item) => !item.roles || item.roles.includes(userRole)
+  );
 
   useEffect(() => {
     if (location)
@@ -151,7 +170,7 @@ function Sidebar({ collapsible, isMobile = false }) {
         )}
       </div>
       <Menu
-        items={items}
+        items={filteredItems}
         mode="inline"
         theme={'light'}
         selectedKeys={[currentPath]}

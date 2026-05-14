@@ -147,7 +147,7 @@ export default function ReadItem({ config, selectedItem }) {
             }}
             icon={<CloseCircleOutlined />}
           >
-            {translate('Close')}
+            Kapat
           </Button>,
           <Button
             key={`${uniqueId()}`}
@@ -159,7 +159,7 @@ export default function ReadItem({ config, selectedItem }) {
             }}
             icon={<FilePdfOutlined />}
           >
-            {translate('Download PDF')}
+            PDF İndir
           </Button>,
           <Button
             key={`${uniqueId()}`}
@@ -169,7 +169,7 @@ export default function ReadItem({ config, selectedItem }) {
             }}
             icon={<MailOutlined />}
           >
-            {translate('Send by Email')}
+            E-posta Gönder
           </Button>,
           <Button
             key={`${uniqueId()}`}
@@ -179,7 +179,7 @@ export default function ReadItem({ config, selectedItem }) {
             icon={<RetweetOutlined />}
             style={{ display: entity === 'quote' ? 'inline-block' : 'none' }}
           >
-            {translate('Convert to Invoice')}
+            Teklife Dönüştür
           </Button>,
 
           <Button
@@ -196,7 +196,7 @@ export default function ReadItem({ config, selectedItem }) {
             type="primary"
             icon={<EditOutlined />}
           >
-            {translate('Edit')}
+            Düzenle
           </Button>,
         ]}
         style={{
@@ -204,9 +204,9 @@ export default function ReadItem({ config, selectedItem }) {
         }}
       >
         <Row>
-          <Statistic title="Status" value={currentErp.status} />
+          <Statistic title="Durum" value={currentErp.status} />
           <Statistic
-            title={translate('SubTotal')}
+            title="Ara Toplam"
             value={moneyFormatter({
               amount: currentErp.subTotal,
               currency_code: currentErp.currency,
@@ -216,14 +216,14 @@ export default function ReadItem({ config, selectedItem }) {
             }}
           />
           <Statistic
-            title={translate('Total')}
+            title="Genel Toplam"
             value={moneyFormatter({ amount: currentErp.total, currency_code: currentErp.currency })}
             style={{
               margin: '0 32px',
             }}
           />
           <Statistic
-            title={translate('Paid')}
+            title="Ödenen"
             value={moneyFormatter({
               amount: currentErp.credit,
               currency_code: currentErp.currency,
@@ -235,16 +235,16 @@ export default function ReadItem({ config, selectedItem }) {
         </Row>
       </PageHeader>
       <Divider dashed />
-      <Descriptions title={`Client : ${currentErp.client.name}`}>
-        <Descriptions.Item label={translate('Address')}>{client.address}</Descriptions.Item>
-        <Descriptions.Item label={translate('email')}>{client.email}</Descriptions.Item>
-        <Descriptions.Item label={translate('Phone')}>{client.phone}</Descriptions.Item>
+      <Descriptions title={`Müşteri: ${currentErp.client.name}`}>
+        <Descriptions.Item label="Adres">{client.address}</Descriptions.Item>
+        <Descriptions.Item label="E-posta">{client.email}</Descriptions.Item>
+        <Descriptions.Item label="Telefon">{client.phone}</Descriptions.Item>
       </Descriptions>
       <Divider />
       <Row gutter={[12, 0]}>
         <Col className="gutter-row" span={11}>
           <p>
-            <strong>{translate('Product')}</strong>
+            <strong>Ürün / Hizmet</strong>
           </p>
         </Col>
         <Col className="gutter-row" span={4}>
@@ -253,7 +253,7 @@ export default function ReadItem({ config, selectedItem }) {
               textAlign: 'right',
             }}
           >
-            <strong>{translate('Price')}</strong>
+            <strong>Birim Fiyat</strong>
           </p>
         </Col>
         <Col className="gutter-row" span={4}>
@@ -262,7 +262,7 @@ export default function ReadItem({ config, selectedItem }) {
               textAlign: 'right',
             }}
           >
-            <strong>{translate('Quantity')}</strong>
+            <strong>Miktar</strong>
           </p>
         </Col>
         <Col className="gutter-row" span={5}>
@@ -271,7 +271,7 @@ export default function ReadItem({ config, selectedItem }) {
               textAlign: 'right',
             }}
           >
-            <strong>{translate('Total')}</strong>
+            <strong>Tutar</strong>
           </p>
         </Col>
         <Divider />
@@ -289,7 +289,7 @@ export default function ReadItem({ config, selectedItem }) {
       >
         <Row gutter={[12, -5]}>
           <Col className="gutter-row" span={12}>
-            <p>{translate('Sub Total')} :</p>
+            <p>Ara Toplam :</p>
           </Col>
 
           <Col className="gutter-row" span={12}>
@@ -297,18 +297,9 @@ export default function ReadItem({ config, selectedItem }) {
               {moneyFormatter({ amount: currentErp.subTotal, currency_code: currentErp.currency })}
             </p>
           </Col>
+          {/* Tax Total kaldırıldı */}
           <Col className="gutter-row" span={12}>
-            <p>
-              {translate('Tax Total')} ({currentErp.taxRate} %) :
-            </p>
-          </Col>
-          <Col className="gutter-row" span={12}>
-            <p>
-              {moneyFormatter({ amount: currentErp.taxTotal, currency_code: currentErp.currency })}
-            </p>
-          </Col>
-          <Col className="gutter-row" span={12}>
-            <p>{translate('Total')} :</p>
+            <p>Genel Toplam :</p>
           </Col>
           <Col className="gutter-row" span={12}>
             <p>

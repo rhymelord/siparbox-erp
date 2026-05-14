@@ -25,6 +25,9 @@ mongoose.connection.on('error', (error) => {
   console.error(`2. 🚫 Error → : ${error.message}`);
 });
 
+const auditLogPlugin = require('./models/plugins/auditLogPlugin');
+mongoose.plugin(auditLogPlugin);
+
 const modelsFiles = globSync('./src/models/**/*.js');
 
 for (const filePath of modelsFiles) {

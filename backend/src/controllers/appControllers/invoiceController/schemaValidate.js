@@ -3,9 +3,9 @@ const schema = Joi.object({
   client: Joi.alternatives().try(Joi.string(), Joi.object()).required(),
   number: Joi.number().required(),
   year: Joi.number().required(),
-  status: Joi.string().required(),
+  status: Joi.string().valid('pending_approval', 'preparing', 'awaiting_shipping', 'cancelled', 'delivered', 'paid').required(),
   notes: Joi.string().allow(''),
-  expiredDate: Joi.date().required(),
+  expiredDate: Joi.date().optional(),
   date: Joi.date().required(),
   // array cannot be empty
   items: Joi.array()

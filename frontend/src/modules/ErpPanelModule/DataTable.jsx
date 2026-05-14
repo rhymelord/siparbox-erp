@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import useResponsive from '@/hooks/useResponsive';
 import {
   EyeOutlined,
   EditOutlined,
@@ -10,7 +11,7 @@ import {
   ArrowRightOutlined,
   ArrowLeftOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Table, Button } from 'antd';
+import { Dropdown, Table, Button, Select } from 'antd';
 import { PageHeader } from '@ant-design/pro-layout';
 
 import AutoCompleteAsync from '@/components/AutoCompleteAsync';
@@ -43,6 +44,7 @@ export default function DataTable({ config, extra = [] }) {
   let { entity, dataTableColumns, disableAdd = false, searchConfig } = config;
 
   const { DATATABLE_TITLE } = config;
+  const { isMobile } = useResponsive();
 
   const { result: listResult, isLoading: listIsLoading } = useSelector(selectListItems);
 
@@ -53,17 +55,17 @@ export default function DataTable({ config, extra = [] }) {
 
   const items = [
     {
-      label: translate('Show'),
+      label: 'Görüntüle',
       key: 'read',
       icon: <EyeOutlined />,
     },
     {
-      label: translate('Edit'),
+      label: 'Düzenle',
       key: 'edit',
       icon: <EditOutlined />,
     },
     {
-      label: translate('Download'),
+      label: 'İndir',
       key: 'download',
       icon: <FilePdfOutlined />,
     },
@@ -73,7 +75,7 @@ export default function DataTable({ config, extra = [] }) {
     },
 
     {
-      label: translate('Delete'),
+      label: 'Sil',
       key: 'delete',
       icon: <DeleteOutlined />,
     },
@@ -150,13 +152,40 @@ export default function DataTable({ config, extra = [] }) {
 
   const dispatch = useDispatch();
 
-  const handelDataTableLoad = (pagination) => {
-    const options = { page: pagination.current || 1, items: pagination.pageSize || 10 };
-    dispatch(erp.list({ entity, options }));
+  const [tableOptions, setTableOptions] = useState({
+    page: 1,
+    items: 10,
+  });
+
+  const dispatcher = (newOptions = {}) => {
+    const mergedOptions = { ...tableOptions, ...newOptions };
+    
+    // Temizleme (undefined olanları silme)
+    Object.keys(mergedOptions).forEach(key => {
+      if (mergedOptions[key] === undefined) {
+        delete mergedOptions[key];
+      }
+    });
+
+    setTableOptions(mergedOptions);
+    dispatch(erp.list({ entity, options: mergedOptions }));
   };
 
-  const dispatcher = () => {
-    dispatch(erp.list({ entity }));
+  const handelDataTableLoad = (pagination, filters, sorter) => {
+    const newOptions = {
+      page: pagination.current || 1,
+      items: pagination.pageSize || 10,
+    };
+    
+    if (sorter && sorter.field) {
+      newOptions.sortBy = sorter.field;
+      newOptions.sortValue = sorter.order === 'ascend' ? 1 : -1;
+    } else {
+      newOptions.sortBy = undefined;
+      newOptions.sortValue = undefined;
+    }
+    
+    dispatcher(newOptions);
   };
 
   useEffect(() => {
@@ -165,11 +194,32 @@ export default function DataTable({ config, extra = [] }) {
     return () => {
       controller.abort();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filterTable = (value) => {
-    const options = { equal: value, filter: searchConfig?.entity };
-    dispatch(erp.list({ entity, options }));
+    if (value) {
+      dispatcher({ equal: value, filter: searchConfig?.entity, page: 1 });
+    } else {
+      // Search temizlendi, tüm filtreleri sıfırla
+      const fresh = { page: 1, items: 10 };
+      setTableOptions(fresh);
+      dispatch(erp.list({ entity, options: fresh }));
+    }
+  };
+
+  const handleRefresh = () => {
+    const fresh = { page: 1, items: 10 };
+    setTableOptions(fresh);
+    dispatch(erp.list({ entity, options: fresh }));
+  };
+
+  const filterByStatus = (value) => {
+    if (!value || value === 'all') {
+      dispatcher({ equal: undefined, filter: undefined, page: 1 });
+    } else {
+      dispatcher({ equal: value, filter: 'status', page: 1 });
+    }
   };
 
   return (
@@ -177,8 +227,6 @@ export default function DataTable({ config, extra = [] }) {
       <PageHeader
         title={DATATABLE_TITLE}
         ghost={true}
-        onBack={() => window.history.back()}
-        backIcon={<ArrowLeftOutlined />}
         extra={[
           <AutoCompleteAsync
             key="search-auto-complete"
@@ -190,8 +238,19 @@ export default function DataTable({ config, extra = [] }) {
             // withRedirect
             // urlToRedirect={'/customer'}
           />,
-          <Button onClick={handelDataTableLoad} key="refresh-button" icon={<RedoOutlined />}>
-            {translate('Refresh')}
+          config.statusOptions && (
+            <Select
+              key="status-filter"
+              style={{ width: 160 }}
+              placeholder="Durum"
+              onChange={filterByStatus}
+              options={[{ value: 'all', label: 'Tümü' }, ...config.statusOptions]}
+              allowClear
+              onClear={() => dispatch(erp.list({ entity }))}
+            />
+          ),
+          <Button onClick={handleRefresh} key="refresh-button" icon={<RedoOutlined />}>
+            Yenile
           </Button>,
 
           !disableAdd && <AddNewItem config={config} key="add-new-item" />,
@@ -208,7 +267,8 @@ export default function DataTable({ config, extra = [] }) {
         pagination={pagination}
         loading={listIsLoading}
         onChange={handelDataTableLoad}
-        scroll={{ x: true }}
+        scroll={{ x: isMobile ? 600 : true }}
+        size={isMobile ? 'small' : 'middle'}
       />
     </>
   );

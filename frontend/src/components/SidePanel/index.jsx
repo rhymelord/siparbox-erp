@@ -7,9 +7,11 @@ import CollapseBox from '../CollapseBox';
 
 const { useBreakpoint } = Grid;
 const { Sider } = Layout;
+import useResponsive from '@/hooks/useResponsive';
 
 export default function SidePanel({ config, topContent, bottomContent, fixHeaderPanel }) {
   const screens = useBreakpoint();
+  const { isMobile } = useResponsive();
 
   const { ADD_NEW_ENTITY } = config;
   const { state, crudContextAction } = useCrudContext();
@@ -60,7 +62,7 @@ export default function SidePanel({ config, topContent, bottomContent, fixHeader
       placement="right"
       onClose={collapsePanel}
       open={!isPanelClose}
-      width={450}
+      width={isMobile ? '100%' : 450}
     >
       <div
         className="sidePanelContent"

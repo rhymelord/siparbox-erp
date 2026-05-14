@@ -14,6 +14,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  contactName: String,
   phone: String,
   country: String,
   city: String,

@@ -7,12 +7,12 @@ import InvoiceDataTableModule from '@/modules/InvoiceModule/InvoiceDataTableModu
 // Sipariş durumu için Türkçe etiket ve renk
 const siparisEtiket = (status) => {
   const map = {
-    draft: { label: 'Taslak', color: 'default' },
-    pending: { label: 'Beklemede', color: 'orange' },
-    sent: { label: 'Gönderildi', color: 'blue' },
-    refunded: { label: 'İade Edildi', color: 'purple' },
-    cancelled: { label: 'İptal', color: 'red' },
-    'on hold': { label: 'Bekletiliyor', color: 'gold' },
+    pending_approval: { label: 'Onay Bekliyor', color: 'orange' },
+    preparing: { label: 'Hazırlanıyor', color: 'blue' },
+    awaiting_shipping: { label: 'Kargo Bekliyor', color: 'cyan' },
+    cancelled: { label: 'İptaller', color: 'red' },
+    delivered: { label: 'Teslim Edildi', color: 'green' },
+    paid: { label: 'Ödendi', color: 'lime' },
   };
   return map[status] || { label: status, color: 'default' };
 };
@@ -45,7 +45,7 @@ export default function Invoice() {
     {
       title: 'Sipariş No',
       dataIndex: 'number',
-      width: 90,
+      width: 100,
       render: (num, record) => `#${num}/${record.year}`,
     },
     {
@@ -55,33 +55,26 @@ export default function Invoice() {
     {
       title: 'Sipariş Tarihi',
       dataIndex: 'date',
+      width: 140,
+      responsive: ['md'],
       render: (date) => dayjs(date).format(dateFormat),
-    },
-    {
-      title: 'Son Ödeme',
-      dataIndex: 'expiredDate',
-      render: (date) => {
-        const d = dayjs(date);
-        const isOverdue = d.isBefore(dayjs(), 'day');
-        return (
-          <span style={{ color: isOverdue ? '#ff4d4f' : 'inherit', fontWeight: isOverdue ? 600 : 400 }}>
-            {d.format(dateFormat)}
-            {isOverdue ? ' ⚠' : ''}
-          </span>
-        );
-      },
     },
     {
       title: 'Toplam Tutar',
       dataIndex: 'total',
+      width: 140,
       align: 'right',
+      sorter: true,
+      sortDirections: ['ascend', 'descend', 'ascend'],
       render: (total, record) =>
         moneyFormatter({ amount: total, currency_code: record.currency }),
     },
     {
       title: 'Tahsilat',
       dataIndex: 'credit',
+      width: 130,
       align: 'right',
+      responsive: ['lg'],
       render: (credit, record) =>
         moneyFormatter({ amount: credit, currency_code: record.currency }),
     },
@@ -111,6 +104,15 @@ export default function Invoice() {
     RECORD_ENTITY: 'Tahsilat Kaydet',
   };
 
+  const statusOptions = [
+    { value: 'pending_approval', label: 'Onay Bekliyor' },
+    { value: 'preparing', label: 'Hazırlanıyor' },
+    { value: 'awaiting_shipping', label: 'Kargo Bekliyor' },
+    { value: 'cancelled', label: 'İptaller' },
+    { value: 'delivered', label: 'Teslim Edildi' },
+    { value: 'paid', label: 'Ödendi' },
+  ];
+
   const configPage = {
     entity,
     ...Labels,
@@ -121,6 +123,7 @@ export default function Invoice() {
     dataTableColumns,
     searchConfig,
     deleteModalLabels,
+    statusOptions,
   };
 
   return <InvoiceDataTableModule config={config} />;

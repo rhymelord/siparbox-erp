@@ -3,12 +3,15 @@ const paginatedList = async (Model, req, res) => {
   const limit = parseInt(req.query.items) || 10;
   const skip = page * limit - limit;
 
-  const { sortBy = 'enabled', sortValue = -1, filter, equal } = req.query;
+  const { filter, equal } = req.query;
+  const sortByField = String(req.query.sortBy || 'enabled');
+  const sortDirection = req.query.sortValue === '1' ? 'asc' : 'desc';
+  const sortObj = {};
+  sortObj[sortByField] = sortDirection;
 
   const fieldsArray = req.query.fields ? req.query.fields.split(',') : [];
 
   let fields;
-
   fields = fieldsArray.length === 0 ? {} : { $or: [] };
 
   for (const field of fieldsArray) {
@@ -36,7 +39,7 @@ const paginatedList = async (Model, req, res) => {
   })
     .skip(skip)
     .limit(limit)
-    .sort({ [sortBy]: sortValue })
+    .sort(sortObj)
     .populate()
     .exec();
 

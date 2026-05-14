@@ -11,12 +11,12 @@ import { selectCurrentAdmin } from '@/redux/auth/selectors';
 import { FILE_BASE_URL } from '@/config/serverApiConfig';
 
 import useLanguage from '@/locale/useLanguage';
-
-import UpgradeButton from './UpgradeButton';
+import useResponsive from '@/hooks/useResponsive';
 
 export default function HeaderContent() {
   const currentAdmin = useSelector(selectCurrentAdmin);
   const { Header } = Layout;
+  const { isMobile } = useResponsive();
 
   const translate = useLanguage();
 
@@ -87,7 +87,7 @@ export default function HeaderContent() {
   return (
     <Header
       style={{
-        padding: '20px',
+        padding: isMobile ? '12px 16px' : '20px',
         background: '#ffffff',
         display: 'flex',
         flexDirection: 'row-reverse',
@@ -123,7 +123,7 @@ export default function HeaderContent() {
 
       {/* <AppsButton /> */}
 
-      <UpgradeButton />
+
     </Header>
   );
 }

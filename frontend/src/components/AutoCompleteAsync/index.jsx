@@ -116,16 +116,16 @@ export default function AutoCompleteAsync({
       loading={isLoading}
       showSearch
       allowClear
-      placeholder={translate('Search')}
+      placeholder="Arama"
       defaultActiveFirstOption={false}
       filterOption={false}
-      notFoundContent={searching ? '... Searching' : <Empty />}
+      notFoundContent={searching ? '... Aranıyor' : <Empty />}
       value={currentValue}
       onSearch={onSearch}
       onClear={() => {
-        // setOptions([]);
-        // setCurrentValue(undefined);
         setSearching(false);
+        setCurrentValue(undefined);
+        if (onChange) onChange(null);
       }}
       onChange={handleSelectChange}
       style={{ minWidth: '220px' }}
